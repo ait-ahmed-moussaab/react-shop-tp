@@ -1,4 +1,4 @@
-import { useCartContext } from '../../context/CartContext.jsx'
+import { useCartContext } from '../../context/cartContext.js'
 
 /**
  * NavBar — barre de navigation principale.
@@ -10,12 +10,7 @@ import { useCartContext } from '../../context/CartContext.jsx'
  *   onCartClick    : function — appelée au clic sur le bouton panier
  */
 export default function NavBar({ searchQuery, onSearchChange, onCartClick }) {
-  // =============================================================
-  // TODO Étape 6 — useContext
-  // Remplacer la ligne ci-dessous par :
-  //   const { cartCount } = useCartContext()
-  // =============================================================
-  const { cartCount } = { cartCount: 0 }
+  const { cartCount } = useCartContext()
 
   return (
     <nav className="navbar navbar-dark bg-dark px-3 gap-3">

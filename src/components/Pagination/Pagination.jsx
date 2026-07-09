@@ -5,15 +5,6 @@
  *   currentPage  : number   — page courante (1-based)
  *   totalPages   : number   — nombre total de pages
  *   onPageChange : function — appelée avec le nouveau numéro de page
- *
- * =============================================================
- * TODO Étape 3
- * Relier les boutons à onPageChange :
- *   Précédent → onPageChange(currentPage - 1)
- *   Suivant   → onPageChange(currentPage + 1)
- * Désactiver Précédent quand currentPage === 1
- * Désactiver Suivant   quand currentPage === totalPages
- * =============================================================
  */
 export default function Pagination({ currentPage, totalPages, onPageChange }) {
   return (
@@ -21,7 +12,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         className="btn btn-outline-secondary"
         disabled={currentPage === 1}
-        onClick={undefined /* TODO : onPageChange(currentPage - 1) */}
+        onClick={() => onPageChange(currentPage - 1)}
       >
         <i className="bi bi-chevron-left me-1"></i>Précédent
       </button>
@@ -33,7 +24,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         className="btn btn-outline-secondary"
         disabled={currentPage === totalPages}
-        onClick={undefined /* TODO : onPageChange(currentPage + 1) */}
+        onClick={() => onPageChange(currentPage + 1)}
       >
         Suivant<i className="bi bi-chevron-right ms-1"></i>
       </button>

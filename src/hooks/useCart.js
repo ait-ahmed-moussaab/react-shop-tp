@@ -13,45 +13,58 @@ const STORAGE_KEY = 'react-shop-cart'
  *   cartCount    : number,         — nombre total d'articles (somme des qty)
  *   cartTotal    : number          — prix total (somme de price × qty)
  * }}
- *
- * =============================================================
- * TODO Étape 5
- *
- * 1. useState — initialiser cart depuis localStorage :
- *      JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? []
- *
- * 2. useEffect([cart]) — synchroniser cart → localStorage :
- *      localStorage.setItem(STORAGE_KEY, JSON.stringify(cart))
- *
- * 3. addToCart avec useCallback :
- *      Si le produit est déjà dans le panier → incrémenter qty
- *      Sinon → ajouter { ...product, qty: 1 }
- *      Penser à utiliser setCart(prev => ...) pour la mise à jour fonctionnelle
- *
- * 4. removeFromCart avec useCallback :
- *      Filtrer les articles dont l'id est différent de celui passé
- *
- * 5. clearCart avec useCallback :
- *      Vider le tableau : setCart([])
- *
- * 6. cartCount avec useMemo([cart]) :
- *      cart.reduce((somme, item) => somme + item.qty, 0)
- *
- * 7. cartTotal avec useMemo([cart]) :
- *      cart.reduce((somme, item) => somme + item.price * item.qty, 0)
- *
- * 8. Retourner tous les éléments ci-dessus
- * =============================================================
  */
 export function useCart() {
-  // TODO
+  const [cart, setCart] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? []
+    } catch {
+      return []
+    }
+  })
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart))
+  }, [cart])
+
+  const addToCart = useCallback((product) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product.id)
+
+      if (existingItem) {
+        return prevCart.map((item) =>
+          item.id === product.id ? { ...item, qty: item.qty + 1 } : item,
+        )
+      }
+
+      return [...prevCart, { ...product, qty: 1 }]
+    })
+  }, [])
+
+  const removeFromCart = useCallback((id) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id))
+  }, [])
+
+  const clearCart = useCallback(() => {
+    setCart([])
+  }, [])
+
+  const cartCount = useMemo(
+    () => cart.reduce((sum, item) => sum + item.qty, 0),
+    [cart],
+  )
+
+  const cartTotal = useMemo(
+    () => cart.reduce((sum, item) => sum + item.price * item.qty, 0),
+    [cart],
+  )
 
   return {
-    cart: [],
-    addToCart: () => {},
-    removeFromCart: () => {},
-    clearCart: () => {},
-    cartCount: 0,
-    cartTotal: 0,
+    cart,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    cartCount,
+    cartTotal,
   }
 }

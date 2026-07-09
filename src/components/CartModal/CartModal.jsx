@@ -1,4 +1,4 @@
-import { useCartContext } from '../../context/CartContext.jsx'
+import { useCartContext } from '../../context/cartContext.js'
 
 /**
  * CartModal — modale d'affichage du panier.
@@ -7,24 +7,9 @@ import { useCartContext } from '../../context/CartContext.jsx'
  * Props :
  *   isOpen  : boolean  — afficher ou masquer la modale
  *   onClose : function — appelée pour fermer la modale
- *
- * =============================================================
- * TODO Étape 6 — useContext
- * Remplacer les 4 lignes de placeholders par :
- *   const { cart, removeFromCart, clearCart, cartTotal } = useCartContext()
- *
- * Puis :
- *   - Dans le .map() → afficher item.title, item.qty, item.price
- *   - Bouton "Supprimer" → onClick={() => removeFromCart(item.id)}
- *   - Bouton "Vider le panier" → onClick={clearCart}
- * =============================================================
  */
 export default function CartModal({ isOpen, onClose }) {
-  // TODO Étape 6 — remplacer par useCartContext()
-  const cart = []
-  const removeFromCart = () => {}
-  const clearCart = () => {}
-  const cartTotal = 0
+  const { cart, removeFromCart, clearCart, cartTotal } = useCartContext()
 
   if (!isOpen) return null
 
@@ -61,14 +46,15 @@ export default function CartModal({ isOpen, onClose }) {
                     className="list-group-item d-flex justify-content-between align-items-center"
                   >
                     <div>
-                      {/* TODO Étape 6 : afficher item.title, item.qty et item.price */}
-                      <span className="fw-semibold">Titre du produit</span>
+                      <span className="fw-semibold">{item.title}</span>
                       <br />
-                      <small className="text-muted">Qté : 0 × 0.00 $</small>
+                      <small className="text-muted">
+                        Qté : {item.qty} × {item.price.toFixed(2)} $
+                      </small>
                     </div>
                     <button
                       className="btn btn-sm btn-outline-danger"
-                      onClick={undefined /* TODO : removeFromCart(item.id) */}
+                      onClick={() => removeFromCart(item.id)}
                     >
                       <i className="bi bi-trash"></i>
                     </button>
@@ -81,7 +67,7 @@ export default function CartModal({ isOpen, onClose }) {
           <div className="modal-footer justify-content-between">
             <button
               className="btn btn-outline-secondary btn-sm"
-              onClick={undefined /* TODO : clearCart */}
+              onClick={clearCart}
               disabled={cart.length === 0}
             >
               <i className="bi bi-trash3 me-1"></i>Vider le panier
